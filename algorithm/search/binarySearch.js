@@ -27,7 +27,7 @@ function binarySearch1(array, target) {
  * @return {boolean}
  */
 function binarySearch2(array, target) {
-  array = quickSort(array);
+  array = mergeSort(array);
   const search = (arr) => {
     if (arr.length < 2) {
       return arr[0] === target;
@@ -69,6 +69,49 @@ function quickSort(array) {
     privot,
     ...quickSort(right)
   ];
+}
+
+/**
+ * @param {number[]} array
+ * @return {number[]}
+ */
+function mergeSort(array) {
+  if (array.length < 2) {
+    return array;
+  }
+  const mid = Math.floor(array.length / 2);
+  const left = array.slice(0, mid);
+  const right = array.slice(mid);
+  return merge(
+    mergeSort(left),
+    mergeSort(right)
+  );
+}
+
+/**
+ * @param {number[]} left
+ * * @param {number[]} right
+ * @return {number[]}
+ */
+function merge(left, right) {
+  let i = 0;
+  let j = 0;
+  let result = [];
+  while (i < left.length && j < right.length) {
+    if (left[i] < right[j]) {
+      result.push(left[i]);
+      i++;
+    } else {
+      result.push(right[j]);
+      j++;
+    }
+  }
+  if (i < left.length) {
+    result = result.concat(left.slice(i));
+  } else {
+    result = result.concat(right.slice(j));
+  }
+  return result;
 }
 
 const arr = [3, 4, 6, 5, 2, 1, 9, 12, 10, 12, 11];
