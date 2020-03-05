@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useRef } from 'react';
-import glslangModule from "@webgpu/glslang/dist/web-devel/glslang"
+import glslangModule from "@webgpu/glslang/dist/web-devel/glslang.onefile"
 
 const App: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
