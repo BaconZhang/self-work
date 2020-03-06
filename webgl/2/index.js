@@ -17,9 +17,9 @@ void main() {
 
 function main() {
   const canvas = document.getElementById("webgl");
-  const gl = Util.getWebglContext(canvas);
+  const gl = WebglUtil.getWebglContext(canvas);
 
-  const program = Util.initShaders(gl, V_SOURCE, F_SOURCE);
+  const program = WebglUtil.initShaders(gl, V_SOURCE, F_SOURCE);
 
   /**
    * @param {WebGLRenderingContext} gl 

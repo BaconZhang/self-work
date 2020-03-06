@@ -1,4 +1,4 @@
-class Util {
+class WebglUtil {
   /**
    * @param {HTMLCanvasElement} canvas 
    * @returns {WebGLRenderingContext}
@@ -30,8 +30,8 @@ class Util {
    * @returns {WebGLProgram}
    */
   static createProgram = (gl, vSource, fSource) => {
-    const vShader = Util.loadShader(gl, gl.VERTEX_SHADER, vSource);
-    const fShader = Util.loadShader(gl, gl.FRAGMENT_SHADER, fSource);
+    const vShader = WebglUtil.loadShader(gl, gl.VERTEX_SHADER, vSource);
+    const fShader = WebglUtil.loadShader(gl, gl.FRAGMENT_SHADER, fSource);
 
     const program = gl.createProgram();
 
@@ -56,7 +56,7 @@ class Util {
    * @returns {WebGLProgram}
    */
   static initShaders = (gl, vSource, fSource) => {
-    const program = Util.createProgram(gl, vSource, fSource);
+    const program = WebglUtil.createProgram(gl, vSource, fSource);
     gl.useProgram(program);
     return program;
   }

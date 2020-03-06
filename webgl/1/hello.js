@@ -16,9 +16,9 @@ void main() {
 
 function main() {
   const canvas = document.getElementById("webgl");
-  const gl = Util.getWebglContext(canvas);
+  const gl = WebglUtil.getWebglContext(canvas);
 
-  const program = Util.initShaders(gl, V_SHADER, F_SHADER);
+  const program = WebglUtil.initShaders(gl, V_SHADER, F_SHADER);
 
   const a_Position = gl.getAttribLocation(program, "a_Position");
   gl.vertexAttrib3f(a_Position, 0.5, 0.5, 0.0);
