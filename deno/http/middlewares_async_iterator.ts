@@ -31,18 +31,25 @@ const compose = <T>(middlewares: Middlewares<T>) => (ctx: T) => {
     return dispatch(0);
 }
 
-const compose2 = <T>(middlewares: Middlewares<T>) => async (ctx: T) => {
-    const arr: (() => Promise<void>)[] = [];
-    for await (const middleware of middlewares.asyncIterator()) {
-        let next = () => Promise.resolve();
-        if (arr.length) {
-            next = arr[arr.length - 1]
-        }
-        arr.push(() => middleware(ctx, next));
-    } 
-    if (arr.length) {
-        arr[arr.length - 1]();
+class Node {
+    value: () => Promise<void>;
+    next: Node | null;
+    constructor(value: () => Promise<void>) {
+        this.value = value;
+        this.next = null;
     }
+}
+
+const compose2 = <T>(middlewares: Middlewares<T>) => async (ctx: T) => {
+    let current = new Node(() => Promise.resolve());
+    for await (const middleware of middlewares.asyncIterator()) {
+        let temp = current;
+        current.next = new Node(() => {
+            return middleware(ctx, temp.value);
+        });
+        current = current.next
+    } 
+    await current.value();
 }
 
 interface Ctx {
