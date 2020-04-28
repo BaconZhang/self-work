@@ -1,0 +1,4 @@
+{
+    "deno.enable": true,
+    "deno.import_map": "./deno/import_map.json"
+}
