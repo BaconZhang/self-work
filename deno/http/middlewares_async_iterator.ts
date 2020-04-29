@@ -11,9 +11,8 @@ class Middlewares<T = {}> {
     }
 
     async *asyncIterator(): AsyncIterableIterator<MiddleWare<T>> {
-       const middlewares = this.middlewares.reverse();
-       for (let i = 0; i < middlewares.length; i++) {
-           yield middlewares[i];
+       for (let i = this.middlewares.length - 1; i >= 0; i--) {
+           yield this.middlewares[i];
        }
     }
 }
@@ -31,25 +30,14 @@ const compose = <T>(middlewares: Middlewares<T>) => (ctx: T) => {
     return dispatch(0);
 }
 
-class Node {
-    value: () => Promise<void>;
-    next: Node | null;
-    constructor(value: () => Promise<void>) {
-        this.value = value;
-        this.next = null;
-    }
-}
-
 const compose2 = <T>(middlewares: Middlewares<T>) => async (ctx: T) => {
-    let current = new Node(() => Promise.resolve());
+    let current = () => Promise.resolve();
     for await (const middleware of middlewares.asyncIterator()) {
-        let temp = current;
-        current.next = new Node(() => {
-            return middleware(ctx, temp.value);
-        });
-        current = current.next
+        const temp = current;
+        const next = () => middleware(ctx, temp);
+        current = next;
     } 
-    await current.value();
+    return current();
 }
 
 interface Ctx {
@@ -81,5 +69,8 @@ middlewares.use(setName);
 middlewares.use(setAge);
 middlewares.use(setGender);
 
-// compose(middlewares)(ctx);
-compose2(middlewares)(ctx);
+(async () => {
+    // await compose(middlewares)(ctx);
+    await compose2(middlewares)(ctx);
+    console.log(ctx);
+})();
