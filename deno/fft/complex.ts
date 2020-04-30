@@ -1,6 +1,6 @@
 const fix = (target: number, fix: number) => Math.round(target * 10 ** fix) / 10 ** fix;
 
-class Complex {
+export default class Complex {
     private r: number;
     private i: number;
     /**
@@ -35,6 +35,10 @@ class Complex {
         const r = (a * c + b * d) / p;
         const i = (b * c - a * d) / p;
         return new Complex(r, i);
+    }
+
+    add(complex: Complex) {
+        return new Complex(this.r + complex.r, this.i + complex.i);
     }
 
     fix(p: number = 4) {
