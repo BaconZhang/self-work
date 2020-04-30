@@ -42,8 +42,49 @@ function dft(signal: Complex[]) {
     )
 }
 
-const signal: Complex[] = [1, 1, 1, 1, 0, 0, 0, 0].map(i => new Complex(i, 0));
-console.log(dft(signal));
+function fft(signal: Complex[]) {
+    signal = fillZero(signal);
+    const N = signal.length;
 
-const signal2: Complex[] = [1, 0, 1, 0, 1, 0, 1, 0].map(i => new Complex(i, 0));
-console.log(dft(signal2));
+    function butterfly(a: Complex[], b: Complex[]): Complex[] {
+        const compute = (m: Complex[], n: Complex[], flag: 1 | -1) => m.map(
+            (i, k) => i.add(
+                n[k].mul(new W(k, 1, N)).mul(new Complex(flag, 0))
+            ).fix()
+        )
+        return [
+            ...compute(a, b, 1),
+            ...compute(a, b, -1)
+        ]
+    }
+    
+    function split(signal: Complex[]): Complex[] {
+        const even = signal.filter((_, i) => i % 2 === 0);
+        const odd = signal.filter((_, i) => i % 2 === 1);
+        return butterfly(fft(even), fft(odd));
+    }
+
+    if (signal.length > 2) {
+        return split(signal);
+    } else {
+        return butterfly(
+            signal.slice(0, 1),
+            signal.slice(1)
+        );
+    }
+}
+
+function duration(callback: Function) {
+    const tsStart = Date.now();
+    callback();
+    const tsEnd = Date.now();
+    console.log(tsEnd - tsStart);
+}
+
+const signal: Complex[] = Array.from({ length: 4096 }, (_, i) => i % 2 === 0 ? 1 : 0).map(i => new Complex(i, 0));
+
+duration(() => dft(signal));
+duration(() => fft(signal));
+
+// const signal2: Complex[] = [1, 0, 1, 0, 1, 0, 1, 0].map(i => new Complex(i, 0));
+// console.log(dft(signal2));
