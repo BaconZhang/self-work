@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>canvas event</title>
+</head>
+<body>
+  <canvas id="canvas" width="1000" height="800"></canvas>
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    const paths = [];
+
+    const rect = new Path2D();
+    rect.rect(10, 10, 200, 100);
+    ctx.stroke(rect);
+    paths.push(rect);
+
+    const circle = new Path2D();
+    circle.arc(150, 150, 100, 0, Math.PI * 2, false);
+    ctx.stroke(circle);
+    paths.push(circle);
+
+    canvas.addEventListener("click", (e) => {
+      const { clientX, clientY } = e;
+      const { offsetLeft, offsetTop } = canvas;
+      const x = clientX - offsetLeft;
+      const y = clientY - offsetTop;
+      for (let i = 0; i < paths.length; i++) {
+        if (ctx.isPointInPath(paths[i], x, y)) {
+          console.log('in', i);
+        }
+      }
+    })
+  </script>
+</body>
+</html>
